@@ -1,0 +1,30 @@
+# Enable the Prometheus endpoint
+management.endpoints.web.exposure.include=health,info,prometheus
+
+# Optionally, configure the path for Prometheus metrics endpoint (default is /actuator/prometheus)
+management.endpoints.web.path-mapping.prometheus=/metrics
+
+# Enable the actuator endpoints
+management.endpoint.health.show-details=always
+management.endpoint.info.enabled=true
+
+#Email Configuration for Yahoo Mail for Testing
+#spring.mail.host=164.100.14.95
+#spring.mail.username=GcF6jJvGtYVIZqLzlDnMPjx/MXYOwo4VgNooRjuiEs4=
+#spring.mail.password=rsXwNq12vgF5RntC74xzXqLKhPxuTjPu
+#spring.mail.port=587
+spring.mail.port=25
+spring.mail.auth=true
+spring.mail.ssl.enable=true
+spring.mail.ssl.protocols=TLSv1.2
+
+#Sms Configuration Here
+#sms.nic.signature=sQ6j6ZbvOl1Dbc2ypwOl2Q==
+#sms.nic.pin=zcK8yCw9QnIJa12WZZ7Yk+32mVf7Liz/
+#sms.nic.username=ofrAI+tSo6x4iDOETGdBHYT4sYiTOygq
+sms.nic.EntityID=1401452190000038911
+sms.nic.dlr=0
+sms.nic.type=UC
+sms.nic.port=443
+sms.nic.failsafe=/failsafe/MLink
+#sms.nic.url=https://smsgw.sms.gov.in
