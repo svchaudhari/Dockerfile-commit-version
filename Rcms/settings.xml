@@ -106,6 +106,23 @@ under the License.
       <nonProxyHosts>local.net|some.host.com</nonProxyHosts>
     </proxy>
   </proxies>
+  <profiles>
+    <profile>
+      <id>timeout-settings</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!-- Set the HTTP connection timeout in milliseconds -->
+        <maven.wagon.http.timeout>600000</maven.wagon.http.timeout>
+        <!-- Set the HTTP read timeout in milliseconds -->
+        <maven.wagon.http.readTimeout>600000</maven.wagon.http.readTimeout>
+        <!-- Retry attempts for downloading artifacts -->
+        <maven.wagon.http.retryHandler.count>5</maven.wagon.http.retryHandler.count>
+      </properties>
+    </profile>
+  </profiles>
+
 
 
   <!-- servers
