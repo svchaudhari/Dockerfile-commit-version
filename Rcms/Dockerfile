@@ -17,7 +17,7 @@ COPY start.sh ./start.sh
 # Not useful for stateless builds
 #RUN mvn -B dependency:go-offline
 COPY ${WORK_DIR}/src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -U
 # Create runtime image
 FROM openjdk:17-alpine
 

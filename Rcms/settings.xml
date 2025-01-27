@@ -1,18 +1,25 @@
 <settings>
   <proxies>
     <proxy>
-      <id>example-proxy</id>
+      <id>HTTP-proxy</id>
       <active>true</active>
       <protocol>http</protocol>
       <host>192.0.2.12</host>
       <port>8080</port>
     </proxy>
     <proxy>
-      <id>example-proxys</id>
+      <id>HTTP-proxys</id>
       <active>true</active>
       <protocol>https</protocol>
       <host>192.0.2.12</host>
       <port>8080</port>
     </proxy>
   </proxies>
+  <mirrors>
+  <mirror>
+    <id>central-mirror</id>
+    <url>https://repo1.maven.org/maven2/</url>
+    <mirrorOf>central</mirrorOf>
+  </mirror>
+</mirrors>
 </settings>
