@@ -18,7 +18,7 @@ COPY start.sh ./start.sh
 RUN rm -rf /root/.m2/repository
 
 # Not useful for stateless builds
-#RUN mvn -B dependency:go-offline
+RUN mvn -B dependency:go-offline
 
 COPY ${WORK_DIR}/src ./src
 
