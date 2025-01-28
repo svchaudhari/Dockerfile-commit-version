@@ -7,17 +7,27 @@ COPY settings.xml /root/.m2/settings.xml
 
 # Copy the project files
 COPY ${WORK_DIR}/pom.xml ./pom.xml
+
 COPY start.sh ./start.sh
 
 # Install curl in the build image
 #RUN apk add --no-cache curl && \
 #rm -rf /var/cache/apk/*
 
+# Clean Maven cache to avoid corruption
+RUN rm -rf /root/.m2/repository
 
 # Not useful for stateless builds
-#RUN mvn -B dependency:go-offline
+RUN mvn -B dependency:go-offline
+
 COPY ${WORK_DIR}/src ./src
-RUN mvn clean package -DskipTests
+
+RUN mvn clean package -DskipTests -U
+
+
+
+
+
 # Create runtime image
 FROM openjdk:17-alpine
 
@@ -29,11 +39,6 @@ FROM openjdk:17-alpine
 EXPOSE 8080
 
 WORKDIR /opt/egov
-
-# Environment variables for database configuration
-#ENV SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
-#ENV SPRING_DATASOURCE_USERNAME=postgres
-#ENV SPRING_DATASOURCE_PASSWORD=password
 
 # Copy application and startup script from the build stage
 COPY --from=build /app/target/*.jar /opt/egov/
