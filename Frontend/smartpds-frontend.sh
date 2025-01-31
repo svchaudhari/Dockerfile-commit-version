@@ -317,7 +317,7 @@ spec:
   ports:
   - name: http
     port: $PORT
-    nodePort: 30003
+    nodePort: 30001
     protocol: TCP
     targetPort: $PORT
   selector:
