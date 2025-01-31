@@ -8,7 +8,7 @@ IMAGE="svchaudhari/smartpds-notify:master-1"
 REPLICAS=3
 ENV_VAR_1="default-value-1"
 ENV_VAR_2="default-value-2"
-PORT=8084
+PORT=8086
 SERVICE_PORT=$PORT
 TARGET_PORT=$PORT
 TERMINATION_GRACE_PERIOD=30
@@ -31,7 +31,7 @@ EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
 
 # Function to print usage
 usage() {
-  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-EE EXTRA_ENV] [-AE append_external_env_vars]"
+  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-ee EXTRA_ENV] [-ae append_external_env_vars]"
   exit 1
 }
 
