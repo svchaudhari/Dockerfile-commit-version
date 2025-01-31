@@ -25,7 +25,7 @@ MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
 EXTRA_ENV=true
-#EXTERNAL_ENV_FILE="external-var-apigateway.txt"  # Path to external file
+#EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
 
 
 
