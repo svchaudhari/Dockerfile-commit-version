@@ -25,7 +25,7 @@ MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
 EXTRA_ENV=true
-#EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
+EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
 
 
 
@@ -342,7 +342,7 @@ spec:
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
 EOF
-#append_external_env_vars
+append_external_env_vars
 append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
