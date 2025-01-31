@@ -1,5 +1,4 @@
 
-
 #!/bin/bash
 
 # Default values
@@ -26,13 +25,13 @@ MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
 EXTRA_ENV=true
-EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
+#EXTERNAL_ENV_FILE="external-var-apigateway.txt"  # Path to external file
 
 
 
 # Function to print usage
 usage() {
-  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-ee EXTRA_ENV] [-ae append_external_env_vars]"
+  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-EE EXTRA_ENV] [-AE append_external_env_vars]"
   exit 1
 }
 
@@ -150,11 +149,111 @@ append_extra_env_vars() {
                   name: pds-adv
             - name: ADV_APP_ID
               value: "SMARTPDS"
-EOF              
+EOF
   fi
 }
 
+append_external_env_vars() {
+  CONFIGMAP_NAME="pds-service-host"
+  SECRET_NAME="db"
 
+  if [[ -f "$EXTERNAL_ENV_FILE" ]]; then
+    while IFS= read -r line; do
+      # Skip empty lines and lines starting with '#'
+      if [[ -n "$line" && ! "$line" =~ ^# ]]; then
+        # Extract the key and value
+        ENV_NAME=$(echo "$line" | cut -d '=' -f 1)
+        ENV_VALUE=$(echo "$line" | cut -d '=' -f 2-)
+
+        # Replace dots with underscores and convert to uppercase
+        ENV_NAME=$(echo "$ENV_NAME" | tr '.' '_' | awk '{print toupper($0)}')
+
+        # Check for specific conditions
+        if [[ "$ENV_NAME" =~ URL$ ]]; then
+          # Take from ConfigMap
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: $ENV_NAME
+EOF
+        elif [[ "$ENV_NAME" =~ USERNAME$ || "$ENV_NAME" =~ PASSWORD$ ]]; then
+          # Take from Secret
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: $SECRET_NAME
+                  key: $ENV_NAME
+EOF
+        elif [[ "$ENV_VALUE" =~ 8081 ]]; then
+          # smartpds-admin service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-admin
+EOF
+        elif [[ "$ENV_VALUE" =~ 8082 ]]; then
+          # smartpds-workflow service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-workflow
+EOF
+        elif [[ "$ENV_VALUE" =~ 8085 ]]; then
+          # smartpds-fps service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-fps
+EOF
+        elif [[ "$ENV_VALUE" =~ 8080 ]]; then
+          # smartpds-apigateway service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-apigateway
+EOF
+        elif [[ "$ENV_VALUE" =~ 8084 ]]; then
+          # smartpds-notify service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-notify
+EOF
+        elif [[ "$ENV_VALUE" =~ 8083 ]]; then
+          # smartpds-rcms service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: smartpds-rcms
+EOF
+        else
+          # Default case: add the raw value
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              value: "$ENV_VALUE"
+EOF
+        fi
+      fi
+    done < "$EXTERNAL_ENV_FILE"
+  else
+    echo "External environment file '$EXTERNAL_ENV_FILE' not found."
+  fi
+}
 
 # Check if the deployment exists
 EXISTING_DEPLOYMENT=$(kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE --ignore-not-found)
@@ -349,5 +448,3 @@ spec:
 EOF
   echo "Service '$SERVICE_NAME' updated successfully."
 fi
-
-
