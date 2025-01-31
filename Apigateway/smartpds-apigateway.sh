@@ -124,7 +124,7 @@ append_extra_env_vars() {
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
             - name: SPDS_GATEWAY_ROUTES_COUNT
-              value: "5"
+              value: "10"
             - name: SPDS_GATEWAY_ROUTES_0_ID
               value: "spds-workflow"
             - name: SPDS_GATEWAY_ROUTES_0_URI
