@@ -150,6 +150,7 @@ append_extra_env_vars() {
                   name: pds-adv
             - name: ADV_APP_ID
               value: "SMARTPDS"
+EOF              
   fi
 }
 
