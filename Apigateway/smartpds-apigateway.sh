@@ -131,7 +131,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-workflow
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_0_PREDICATES_0
               value: "/workflow/**"
             - name: SPDS_GATEWAY_ROUTES_0_FILTERS_0
@@ -142,7 +142,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-admin
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_1_PREDICATES_0
               value: "/admin/**"
             - name: SPDS_GATEWAY_ROUTES_1_FILTERS_0
@@ -153,7 +153,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-rcms
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_2_PREDICATES_0
               value: "/rcms/**"
             - name: SPDS_GATEWAY_ROUTES_2_FILTERS_0
@@ -164,7 +164,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-notify
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_3_PREDICATES_0
               value: "/notify/**"
             - name: SPDS_GATEWAY_ROUTES_3_FILTERS_0
@@ -175,7 +175,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-fps
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_4_PREDICATES_0
               value: "/fps/**"
             - name: SPDS_GATEWAY_ROUTES_4_FILTERS_0
@@ -186,7 +186,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-workflow
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_5_PREDICATES_0
               value: "/spds-workflow-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_5_FILTERS_0
@@ -197,7 +197,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-admin
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_6_PREDICATES_0
               value: "/spds-admin-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_6_FILTERS_0
@@ -208,7 +208,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-rcms
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_7_PREDICATES_0
               value: "/spds-rcms-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_7_FILTERS_0
@@ -219,7 +219,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-notify
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_8_PREDICATES_0
               value: "/spds-notify-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_8_FILTERS_0
@@ -230,7 +230,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-fps
-                  name: $CONFIGMAP_DB
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_9_PREDICATES_0
               value: "/spds-fps-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_9_FILTERS_0
