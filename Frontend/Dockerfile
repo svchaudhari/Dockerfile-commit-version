@@ -3,7 +3,7 @@ FROM node:23-alpine3.20 AS build
 WORKDIR /app
 ARG NPM_PROXY=http://192.0.2.12:8080
 ARG NPM_HTTPS_PROXY=http://192.0.2.12:8080
-RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_HTTPS_PROXY
+RUN npm config set proxy $NPM_PROXY && npm config set proxy $NPM_HTTPS_PROXY
 
 # Set environment variables
 ENV BASE_URL=http://10.192.111.177:30004 \
@@ -31,8 +31,9 @@ ENV BASE_URL=http://10.192.111.177:30004 \
     VITE_API_APPLICATION_INBOX_SERVICE="/application/inbox" \
     VITE_API_CASTE_CATEGORY_SERVICE="/casteCategory"
 
-# Install dependencies
+# Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
+
 RUN npm install --verbose
 
 # Copy the rest of the application code and build for production
