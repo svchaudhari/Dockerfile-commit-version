@@ -1,9 +1,10 @@
 # Enable the Prometheus endpoint
 management.endpoints.web.exposure.include=health,info,prometheus
-
+spring.jpa.hibernate.ddl-auto = update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 # Optionally, configure the path for Prometheus metrics endpoint (default is /actuator/prometheus)
 management.endpoints.web.path-mapping.prometheus=/metrics
-
 # Enable the actuator endpoints
 management.endpoint.health.show-details=always
 management.endpoint.info.enabled=true
