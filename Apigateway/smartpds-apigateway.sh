@@ -235,6 +235,28 @@ append_extra_env_vars() {
               value: "/spds-fps-api-docs/**"
             - name: SPDS_GATEWAY_ROUTES_9_FILTERS_0
               value: "0"
+            - name: SPDS_GATEWAY_ROUTES_10_ID
+              value: spds-document
+            - name: SPDS_GATEWAY_ROUTES_10_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-workflow
+                  name: pds-service-host
+            - name: SPDS_GATEWAY_ROUTES_10_PREDICATES_0
+              value: /document/**
+            - name: SPDS_GATEWAY_ROUTES_10_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_11_ID
+              value: spds-document-swagger-api-docs
+            - name: SPDS_GATEWAY_ROUTES_11_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-document
+                  name: pds-service-host
+            - name: SPDS_GATEWAY_ROUTES_11_PREDICATES_0
+              value: /spds-document-api-docs/**
+            - name: SPDS_GATEWAY_ROUTES_11_FILTERS_0
+              value: "0"
 EOF
   fi
 }
