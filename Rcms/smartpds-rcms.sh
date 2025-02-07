@@ -79,7 +79,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-admin
+                  key: spds-admin
 EOF
         elif [[ "$ENV_VALUE" =~ 8082 ]]; then
           # smartpds-workflow service
@@ -88,7 +88,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-workflow
+                  key: spds-workflow
 EOF
         elif [[ "$ENV_VALUE" =~ 8085 ]]; then
           # smartpds-fps service
@@ -97,7 +97,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-fps
+                  key: spds-fps
 EOF
         elif [[ "$ENV_VALUE" =~ 8080 ]]; then
           # smartpds-apigateway service
@@ -106,7 +106,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-apigateway
+                  key: spds-apigateway
 EOF
         elif [[ "$ENV_VALUE" =~ 8084 ]]; then
           # smartpds-notify service
@@ -115,7 +115,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-notify
+                  key: spds-notify
 EOF
         elif [[ "$ENV_VALUE" =~ 8083 ]]; then
           # smartpds-rcms service
@@ -124,7 +124,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-rcms
+                  key: spds-rcms
 EOF
         else
           # Default case: add the raw value
@@ -299,11 +299,26 @@ spec:
                   - sleep 10
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
+        volumeMounts:
+        - name: app-storage
+          mountPath: /usr/share/smartpds/data
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: app-storage
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: smartpds-pvc
           env:
             - name: SERVER_CONTEXT_PATH
               value: $DEPLOYMENT_NAME
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
+              
 EOF
 append_external_env_vars
 create_deployment_with_db_vars
@@ -411,3 +426,4 @@ EOF
   echo "Service '$SERVICE_NAME' updated successfully."
 fi
 
+    
