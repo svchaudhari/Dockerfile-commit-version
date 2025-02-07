@@ -9,7 +9,7 @@ IMAGE="svchaudhari/smartpds-notify:master-1"
 REPLICAS=3
 ENV_VAR_1="default-value-1"
 ENV_VAR_2="default-value-2"
-PORT=8084
+PORT=8082
 SERVICE_PORT=$PORT
 TARGET_PORT=$PORT
 TERMINATION_GRACE_PERIOD=30
@@ -25,95 +25,14 @@ CPU_REQUEST="250m"
 MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
-EXTRA_ENV=true
-EXTERNAL_ENV_FILE="external-var-rcms.txt"  # Path to external file
+EXTERNAL_ENV_FILE="external-var-workflow.txt"  # Path to external file
 
 
 
 # Function to print usage
 usage() {
-  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-EE EXTRA_ENV] [-AE append_external_env_vars]"
+  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars]"
   exit 1
-}
-
-
-
-# Parse command-line arguments
-while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
-  case $opt in
-    n) NAMESPACE=$OPTARG ;;
-    d) DEPLOYMENT_NAME=$OPTARG ;;
-    i) IMAGE=$OPTARG ;;
-    r) REPLICAS=$OPTARG ;;
-    e1) ENV_VAR_1=$OPTARG ;;
-    e2) ENV_VAR_2=$OPTARG ;;
-    p) PORT=$OPTARG ;;
-    sp) SERVICE_PORT=$OPTARG ;;
-    tp) TARGET_PORT=$OPTARG ;;
-    t) TERMINATION_GRACE_PERIOD=$OPTARG ;;
-    c) CONFIGMAP_DB=$OPTARG ;;
-    s) SECRET_DB=$OPTARG ;;
-    ep) ENABLE_PROBES=$OPTARG ;;
-    db) DEPLOY_DB_VARS=$OPTARG ;;
-    EE) EXTRA_ENV=$OPTARG ;;
-    AE) append_external_env_vars=$OPTARG ;;
-    h) usage ;;
-    *) usage ;;
-  esac
-done
-
-# Check if DEPLOY_DB_VARS is enabled
-create_deployment_with_db_vars() {
-  if [[ "$DEPLOY_DB_VARS" == "true" ]]; then
-    echo "Appending database environment variables to the deployment file..."
-    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: SPRING_DATASOURCE_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: db-url
-                  name: $CONFIGMAP_DB
-            - name: SPRING_DATASOURCE_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: $SECRET_DB
-            - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: $SECRET_DB
-EOF
-  fi
-}
-
- # Conditionally include probes
- create_deployment_with_probes() {
-  if [[ "$ENABLE_PROBES" == "true" ]]; then
-    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-          livenessProbe:
-            failureThreshold: 5
-            httpGet:
-              path:  /actuator/health
-              port: $PORT
-              scheme: HTTP
-            initialDelaySeconds: 30
-            periodSeconds: 60
-            successThreshold: 1
-            timeoutSeconds: 3
-          readinessProbe:
-            failureThreshold: 5
-            httpGet:
-              path: /actuator/health
-              port: $PORT
-              scheme: HTTP
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 3
-EOF
-  else
-    echo "Probes are disabled. No probes configuration will be added to the deployment."
-  fi
 }
 
 # Function to append environment variables from an external file
@@ -220,25 +139,80 @@ EOF
     echo "External environment file '$EXTERNAL_ENV_FILE' not found."
   fi
 }
-append_extra_env_vars() {
-  if [[ "$EXTRA_ENV" == "true" ]]; then
+
+# Parse command-line arguments
+while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
+  case $opt in
+    n) NAMESPACE=$OPTARG ;;
+    d) DEPLOYMENT_NAME=$OPTARG ;;
+    i) IMAGE=$OPTARG ;;
+    r) REPLICAS=$OPTARG ;;
+    e1) ENV_VAR_1=$OPTARG ;;
+    e2) ENV_VAR_2=$OPTARG ;;
+    p) PORT=$OPTARG ;;
+    sp) SERVICE_PORT=$OPTARG ;;
+    tp) TARGET_PORT=$OPTARG ;;
+    t) TERMINATION_GRACE_PERIOD=$OPTARG ;;
+    c) CONFIGMAP_DB=$OPTARG ;;
+    s) SECRET_DB=$OPTARG ;;
+    ep) ENABLE_PROBES=$OPTARG ;;
+    db) DEPLOY_DB_VARS=$OPTARG ;;
+    h) usage ;;
+    *) usage ;;
+  esac
+done
+
+# Check if DEPLOY_DB_VARS is enabled
+create_deployment_with_db_vars() {
+  if [[ "$DEPLOY_DB_VARS" == "true" ]]; then
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-          volumeMounts:
-          - name: app-storage
-            mountPath: /usr/share/smartpds/data
-        - name: nginx
-          image: nginx:latest
-          ports:
-          - containerPort: 80
-          volumeMounts:
-          - name: app-storage
-            mountPath: /usr/share/nginx/html
-      volumes:
-      - name: app-storage
-        persistentVolumeClaim:
-          claimName: smartpds-pvc
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: db-url
+                  name: $CONFIGMAP_DB
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  key: username
+                  name: $SECRET_DB
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: $SECRET_DB
 EOF
+  fi
+}
+
+ # Conditionally include probes
+ create_deployment_with_probes() {
+  if [[ "$ENABLE_PROBES" == "true" ]]; then
+    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path:  /actuator/health
+              port: $PORT
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /actuator/health
+              port: $PORT
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 3
+EOF
+  else
+    echo "Probes are disabled. No probes configuration will be added to the deployment."
   fi
 }
 
@@ -334,7 +308,6 @@ EOF
 append_external_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
-append_extra_env_vars
 # Conditionally include init containers
 if [[ "$INIT_CONTAINER_ENABLED" == "true" ]]; then
   if [[ "$DB_MIGRATION_ENABLED" == "true" ]]; then

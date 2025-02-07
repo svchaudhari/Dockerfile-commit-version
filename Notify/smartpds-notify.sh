@@ -26,7 +26,7 @@ MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
 EXTRA_ENV=true
-EXTERNAL_ENV_FILE="external-var-notify.txt"  # Path to external file
+EXTERNAL_ENV_FILE="external-var-rcms.txt"  # Path to external file
 
 
 
