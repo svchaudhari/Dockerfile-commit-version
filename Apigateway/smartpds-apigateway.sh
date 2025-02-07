@@ -316,6 +316,8 @@ spec:
                     app: $DEPLOYMENT_NAME
                 topologyKey: kubernetes.io/hostname
               weight: 100
+      nodeSelector:
+        kubernetes.io/hostname: 10.192.111.177  # Ensure this matches the node's label
       terminationGracePeriodSeconds: 30
       restartPolicy: Always
       schedulerName: default-scheduler
