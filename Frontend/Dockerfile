@@ -20,6 +20,7 @@ WORKDIR /app
 
 # Install dependencies again for development
 COPY package.json package-lock.json ./
+RUN export NODE_OPTIONS=--openssl-legacy-provider
 RUN npm install --verbose
 
 # Copy the full source code
