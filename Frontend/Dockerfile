@@ -1,5 +1,9 @@
 # Stage 1: Build the React app
 FROM node:23-alpine3.20 AS build
+
+ARG NPM_PROXY=http://192.0.2.12:8080
+ARG NPM_HTTPS_PROXY=http://192.0.2.12:8080
+RUN npm config set proxy $NPM_PROXY && npm config set proxy $NPM_HTTPS_PROXY
 WORKDIR /app
 
 # Debug: Ensure directory is created
@@ -9,6 +13,8 @@ RUN mkdir -p /app && ls -l /
 # Copy package.json and install dependencies first (leveraging cache)
 COPY package.json package-lock.json ./
 
+COPY package.json package-lock.json ./
+RUN export NODE_OPTIONS=--openssl-legacy-provider
 RUN npm install --verbose
 
 # Copy the rest of the app and build for production
@@ -23,6 +29,7 @@ WORKDIR /app
 
 # Copy package.json and install dependencies again
 COPY package.json package-lock.json ./
+RUN export NODE_OPTIONS=--openssl-legacy-provider
 RUN npm install --verbose
 
 # Copy the full source code
