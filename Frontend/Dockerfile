@@ -6,6 +6,10 @@ WORKDIR /app
 ARG NPM_PROXY=http://192.0.2.12:8080
 RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY
 
+# Disable strict SSL in npm
+RUN npm config set strict-ssl false
+RUN npm config set registry http://registry.npmjs.org/
+
 # Install dependencies and build React app
 COPY package.json package-lock.json ./
 RUN npm install
@@ -18,5 +22,6 @@ COPY --from=build-stage /app/build /usr/share/nginx/html
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
