@@ -234,6 +234,8 @@ append_extra_env_vars() {
               value: "true"
             - name: SPRING_MAIL_SSL_PROTOCOLS
               value: "TLSv1.2"
+            - name: SPRING_MAIL_STARTTLS_ENABLE
+              value: "true"
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
