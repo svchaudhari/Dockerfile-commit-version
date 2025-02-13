@@ -225,7 +225,7 @@ append_extra_env_vars() {
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
             - name: SPRING_MAIL_HOST
-              value: "relay.nic.in"
+              value: "smtpgwhyd.nic.in"
             - name: SPRING_MAIL_PORT
               value: "25"
             - name: SPRING_MAIL_AUTH
