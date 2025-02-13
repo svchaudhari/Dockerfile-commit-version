@@ -225,7 +225,15 @@ append_extra_env_vars() {
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
             - name: SPRING_MAIL_HOST
-              value: relay.nic.in
+              value: "relay.nic.in"
+            - name: SPRING_MAIL_PORT
+              value: "25"
+            - name: SPRING_MAIL_AUTH
+              value: true
+            - name: SPRING_MAIL_SSL_ENABLE
+              value: true
+            - name: SPRING_MAIL_SSL_PROTOCOLS
+              value: TLSv1.2
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -256,7 +264,16 @@ append_extra_env_vars() {
                 configMapKeyRef:
                   key: smartpds-sms-url
                   name: pds-service-host
-
+            - name: SMS_NIC_ENTITYID
+              value: "1401452190000038911"
+            - name: SMS_NIC_DLR
+              value: "0"
+            - name: SMS_NIC_TYPE
+              value: "UC"
+            - name: SMS_NIC_PORT
+              value: "443"
+            - name: SMS_NIC_FAILSAFE
+              value: "/failsafe/MLink"
 EOF
   fi
 }
