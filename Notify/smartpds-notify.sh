@@ -224,6 +224,8 @@ append_extra_env_vars() {
   if [[ "$EXTRA_ENV" == "true" ]]; then
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: SPRING_MAIL_HOST
+              value: relay.nic.in
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
