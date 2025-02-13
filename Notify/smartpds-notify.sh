@@ -229,11 +229,11 @@ append_extra_env_vars() {
             - name: SPRING_MAIL_PORT
               value: "25"
             - name: SPRING_MAIL_AUTH
-              value: true
+              value: "true"
             - name: SPRING_MAIL_SSL_ENABLE
-              value: true
+              value: "true"
             - name: SPRING_MAIL_SSL_PROTOCOLS
-              value: TLSv1.2
+              value: "TLSv1.2"
             - name: SPRING_MAIL_USERNAME
               valueFrom:
                 secretKeyRef:
