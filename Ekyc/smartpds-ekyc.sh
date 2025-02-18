@@ -326,7 +326,7 @@ spec:
               cpu: "250m"
             limits:
               memory: "512Mi"
-              cpu: "500m"
+              cpu: "300m"
           lifecycle:
             preStop:
               exec:
