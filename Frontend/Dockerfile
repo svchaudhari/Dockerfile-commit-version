@@ -4,11 +4,16 @@ FROM node:20-alpine AS build-stage
 # Set working directory
 WORKDIR /app
 
-# Ensure CA certificates are installed
-RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+# Set up proxy (if required)
+ARG NPM_PROXY=http://192.0.2.12:8080
+ENV HTTP_PROXY=$NPM_PROXY
+ENV HTTPS_PROXY=$NPM_PROXY
+
+# Ensure CA certificates are installed with proxy
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+    apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
 # Set npm proxy (Remove if not needed)
-ARG NPM_PROXY=http://192.0.2.12:8080
 RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
 
 # Ensure TLS 1.2+ is used
