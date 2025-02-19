@@ -1,27 +1,42 @@
-FROM node:23-alpine3.20 AS build-stage
+# Use a stable Node.js version
+FROM node:20-alpine AS build-stage
+
+# Set working directory
 WORKDIR /app
 
-# Set npm proxy
+# Ensure CA certificates are installed
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+
+# Set npm proxy (Remove if not needed)
 ARG NPM_PROXY=http://192.0.2.12:8080
-RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY
+RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
 
 # Ensure TLS 1.2+ is used
-RUN npm config set registry https://registry.npmjs.org/
-RUN npm config set strict-ssl true
+RUN npm config set registry https://registry.npmjs.org/ \
+    && npm config set strict-ssl true
 ENV NODE_OPTIONS="--tls-min-v1.2"
 
-# Install dependencies and build React app
+# Copy package files separately for better caching
 COPY package.json package-lock.json ./
-RUN npm install
+
+# Run npm install with SSL workarounds
+RUN npm cache clean --force && npm install --verbose
+
+# Copy source files and build the React app
 COPY . .
 RUN npm run build
 
-# Use Nginx to serve the built files
+# ----------------- Production Stage ----------------- #
 FROM nginx:alpine AS production-stage
+
+# Copy built React app from build-stage
 COPY --from=build-stage /app/build /usr/share/nginx/html
 
 # Copy custom Nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Expose port 80 for web access
 EXPOSE 80
+
+# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
