@@ -3,9 +3,6 @@ FROM svchaudhari/alpine-maven-builder-jdk17:master-1 AS build
 ARG WORK_DIR
 WORKDIR /app
 
-ENV HTTP_PROXY=http://192.0.2.12:8080
-ENV HTTPS_PROXY=http://192.0.2.12:8080
-
 COPY settings.xml /root/.m2/settings.xml
 
 # Copy the project files
@@ -25,9 +22,6 @@ RUN mvn -B dependency:go-offline
 
 COPY ${WORK_DIR}/src ./src
 
-RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && apk add --no-cache curl && \
-    rm -rf /var/cache/apk/*
-
 RUN mvn clean package -DskipTests -U
 
 
@@ -37,9 +31,11 @@ RUN mvn clean package -DskipTests -U
 # Create runtime image
 FROM openjdk:17-alpine
 
-# Install curl in the runtime image
-RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && apk add --no-cache curl && \
-    rm -rf /var/cache/apk/*
+ENV HTTP_PROXY=$NPM_PROXY
+ENV HTTPS_PROXY=$NPM_PROXY
+
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+    apk update && apk add --no-cache curl
 
 
 EXPOSE 8080
