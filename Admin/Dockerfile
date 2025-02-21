@@ -3,9 +3,8 @@ FROM svchaudhari/alpine-maven-builder-jdk17:master-1 AS build
 ARG WORK_DIR
 WORKDIR /app
 
-ARG NPM_PROXY=http://192.0.2.12:8080
-ENV HTTP_PROXY=$NPM_PROXY
-ENV HTTPS_PROXY=$NPM_PROXY
+ENV HTTP_PROXY=http://192.0.2.12:8080
+ENV HTTPS_PROXY=http://192.0.2.12:8080
 
 COPY settings.xml /root/.m2/settings.xml
 
