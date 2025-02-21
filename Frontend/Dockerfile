@@ -25,7 +25,8 @@ ENV NODE_OPTIONS="--tls-min-v1.2"
 COPY package.json package-lock.json ./
 
 # Run npm install with SSL workarounds
-RUN  npm install --legacy-peer-deps
+RUN  RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+     npm install
 
 
 # Copy source files and build the React app
