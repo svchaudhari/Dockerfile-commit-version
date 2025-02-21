@@ -3,6 +3,10 @@ FROM svchaudhari/alpine-maven-builder-jdk17:master-1 AS build
 ARG WORK_DIR
 WORKDIR /app
 
+ARG NPM_PROXY=http://192.0.2.12:8080
+ENV HTTP_PROXY=$NPM_PROXY
+ENV HTTPS_PROXY=$NPM_PROXY
+
 COPY settings.xml /root/.m2/settings.xml
 
 # Copy the project files
@@ -24,7 +28,7 @@ COPY ${WORK_DIR}/src ./src
 
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && apk add --no-cache curl && \
     rm -rf /var/cache/apk/*
-    
+
 RUN mvn clean package -DskipTests -U
 
 
