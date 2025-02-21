@@ -201,11 +201,11 @@ spec:
               protocol: TCP
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "250m"
+              memory: "$MEMORY_REQUEST"
+              cpu: "$CPU_REQUEST"
             limits:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "$MEMORY_LIMIT"
+              cpu: "$CPU_LIMIT"
           lifecycle:
             preStop:
               exec:
