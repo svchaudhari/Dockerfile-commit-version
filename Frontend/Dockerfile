@@ -11,7 +11,7 @@ ENV HTTPS_PROXY=$NPM_PROXY
 
 # Ensure CA certificates are installed with proxy
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-    apk update curl 
+    apk update && apk add --no-cache curl  ca-certificates && update-ca-certificates
 
 # Set npm proxy (Remove if not needed)
 RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
