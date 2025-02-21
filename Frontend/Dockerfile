@@ -18,14 +18,14 @@ RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || 
 
 # Ensure TLS 1.2+ is used
 RUN npm config set registry https://registry.npmjs.org/ \
-    && npm config set strict-ssl true
+    && npm config set strict-ssl false
 ENV NODE_OPTIONS="--tls-min-v1.2"
 
 # Copy package files separately for better caching
 COPY package.json package-lock.json ./
 
 # Run npm install with SSL workarounds
-RUN npm cache clean --force && npm install --verbose
+RUN npm install --verbose
 
 # Copy source files and build the React app
 COPY . .
