@@ -7,12 +7,7 @@ COPY settings.xml /root/.m2/settings.xml
 
 # Copy the project files
 COPY ${WORK_DIR}/pom.xml ./pom.xml
-
 COPY start.sh ./start.sh
-
-# Install curl in the build image
-#RUN apk add --no-cache curl && \
-#rm -rf /var/cache/apk/*
 
 # Clean Maven cache to avoid corruption
 RUN rm -rf /root/.m2/repository
@@ -24,17 +19,19 @@ COPY ${WORK_DIR}/src ./src
 
 RUN mvn clean package -DskipTests -U
 
-
-
-
-
-# Create runtime image
+# ----------------- Runtime Stage ----------------- #
 FROM openjdk:17-alpine
 
-# Install curl in the runtime image
-#RUN apk add --no-cache curl && \
-    #rm -rf /var/cache/apk/*
+# Set proxy environment variables
+ARG NPM_PROXY=http://192.0.2.12:8080
+ENV HTTP_PROXY=$NPM_PROXY
+ENV HTTPS_PROXY=$NPM_PROXY
 
+# Ensure curl is installed using the proxy
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+    apk update && \
+    apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 
