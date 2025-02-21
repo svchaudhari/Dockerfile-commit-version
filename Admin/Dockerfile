@@ -22,6 +22,9 @@ RUN mvn -B dependency:go-offline
 
 COPY ${WORK_DIR}/src ./src
 
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
+    
 RUN mvn clean package -DskipTests -U
 
 
@@ -32,8 +35,8 @@ RUN mvn clean package -DskipTests -U
 FROM openjdk:17-alpine
 
 # Install curl in the runtime image
-#RUN apk add --no-cache curl && \
-    #rm -rf /var/cache/apk/*
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
 
 
 EXPOSE 8080
