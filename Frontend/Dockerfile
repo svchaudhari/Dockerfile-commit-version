@@ -11,7 +11,7 @@ ENV HTTPS_PROXY=$NPM_PROXY
 
 # Ensure CA certificates are installed with proxy
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-    apk update && apk add --no-cache curl  ca-certificates && update-ca-certificates
+    apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
 # Set npm proxy (Remove if not needed)
 RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
@@ -25,9 +25,7 @@ ENV NODE_OPTIONS="--tls-min-v1.2"
 COPY package.json package-lock.json ./
 
 # Run npm install with SSL workarounds
-RUN  RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-     npm install
-
+RUN npm cache clean --force && npm install --verbose
 
 # Copy source files and build the React app
 COPY . .
