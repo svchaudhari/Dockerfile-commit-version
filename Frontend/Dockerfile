@@ -21,7 +21,7 @@ FROM base-stage AS dependencies-stage
 COPY package*.json ./
 
 # Install dependencies with production flag
-RUN npm ci --only=production --silent
+RUN npm Install --silent
 
 # ----------------- Build Stage ----------------- #
 FROM base-stage AS build-stage
