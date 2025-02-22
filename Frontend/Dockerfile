@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:21-alpine AS build
+FROM node:23-alpine3.20 AS build
 WORKDIR /app
 
 
@@ -20,7 +20,7 @@ COPY . ./
 RUN npm run build
 
 # Stage 2: Development environment
-FROM node:18-alpine AS development
+FROM node:23-alpine3.20 AS development
 WORKDIR /app
 
 # Install dependencies again for development
