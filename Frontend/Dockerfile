@@ -13,7 +13,7 @@ RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || 
 
 # Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --frozen-lockfile
 
 # Copy the rest of the application code and build for production
 COPY . ./
