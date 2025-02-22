@@ -23,7 +23,7 @@ ENV NODE_OPTIONS="--tls-min-v1.2"
 COPY package.json package-lock.json ./
 
 # Run npm install with SSL workarounds
-RUN npm cache clean --force && npm install --verbose
+RUN npm install --verbose
 
 # Copy source files and build the React app
 COPY . .
