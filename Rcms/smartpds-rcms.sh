@@ -9,7 +9,7 @@ IMAGE="svchaudhari/smartpds-notify:master-1"
 REPLICAS=3
 ENV_VAR_1="default-value-1"
 ENV_VAR_2="default-value-2"
-PORT=8084
+PORT=8083
 SERVICE_PORT=$PORT
 TARGET_PORT=$PORT
 TERMINATION_GRACE_PERIOD=30
@@ -395,9 +395,9 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
   - name: http
-    port: $PORT
+    port: $SERVICE_PORT
     protocol: TCP
-    targetPort: $PORT
+    targetPort: $TARGET_PORT
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
