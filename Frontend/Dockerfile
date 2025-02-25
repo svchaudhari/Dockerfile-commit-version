@@ -7,7 +7,7 @@ ARG NPM_PROXY=http://192.0.2.12:8080
 ENV HTTP_PROXY=$NPM_PROXY
 ENV HTTPS_PROXY=$NPM_PROXY
 
-RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
+#RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
 
 
 
@@ -25,8 +25,12 @@ WORKDIR /app
 
 # Install dependencies again for development
 COPY package.json package-lock.json ./
-RUN npm config set proxy $NPM_PROXY && npm config set https-proxy $NPM_PROXY || true
-RUN npm install --frozen-lockfile
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+    apk update && \
+    apk add --no-cache curl && \
+    npm install --frozen-lockfile && \
+    rm -rf /var/cache/apk/*
+
 
 # Copy the full source code
 COPY . ./
