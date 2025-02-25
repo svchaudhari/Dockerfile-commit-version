@@ -26,10 +26,7 @@ WORKDIR /app
 # Install dependencies again for development
 COPY package.json package-lock.json ./
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-    apk update && \
-    apk add --no-cache curl && \
-    npm install --frozen-lockfile && \
-    rm -rf /var/cache/apk/*
+    npm install --verbose
 
 
 # Copy the full source code
