@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:18-alpine AS build
+FROM node:20-alpine AS build
 WORKDIR /app
 
 ARG NPM_PROXY=http://192.0.2.12:8080
@@ -16,7 +16,7 @@ COPY . ./
 RUN npm run build
 
 # Stage 2: Development environment
-FROM node:18-alpine AS development
+FROM node:20-alpine AS development
 WORKDIR /app
 
 # Install dependencies again for development
