@@ -369,8 +369,8 @@ spec:
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
 EOF
-append_external_env_vars
-append_extra_env_vars
+#append_external_env_vars
+#append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
 # Conditionally include init containers
