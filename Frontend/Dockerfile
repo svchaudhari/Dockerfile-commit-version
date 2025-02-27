@@ -15,10 +15,26 @@ RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
 COPY . ./
 RUN npm run build
 
-# Stage 2: Production environment
+# Stage 2: Development environment
+FROM node:18-alpine AS development
+WORKDIR /app
+
+# Install dependencies again for development
+COPY package.json package-lock.json ./
+RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+    npm install --verbose
+
+# Copy the full source code
+COPY . ./
+
+# Expose port for the development server
+EXPOSE 3000
+CMD ["npm", "start"]
+
+# Stage 3: Production environment
 FROM nginx:alpine AS production
 
-# Copy the production build artifacts
+# Copy the production build artifacts from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy custom NGINX configuration
