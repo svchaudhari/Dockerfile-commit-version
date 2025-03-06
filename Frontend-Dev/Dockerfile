@@ -8,6 +8,9 @@ ENV HTTPS_PROXY=$NPM_PROXY
 
 # Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
+
+RUN export NODE_OPTIONS=--openssl-legacy-provider
+
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
     npm install --verbose
 
@@ -21,6 +24,10 @@ WORKDIR /app
 
 # Install dependencies again for development
 COPY package.json package-lock.json ./
+
+
+RUN export NODE_OPTIONS=--openssl-legacy-provider
+
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
     npm install --verbose
 
