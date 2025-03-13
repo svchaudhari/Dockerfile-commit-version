@@ -438,9 +438,10 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
   - name: http
-    port: $SERVICE_PORT
+    port: $PORT
     protocol: TCP
-    targetPort: $TARGET_PORT
+    nodePort: 30009
+    targetPort: $PORT
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
