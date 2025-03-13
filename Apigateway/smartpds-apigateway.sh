@@ -9,7 +9,7 @@ IMAGE="svchaudhari/smartpds-notify:master-1"
 REPLICAS=3
 ENV_VAR_1="default-value-1"
 ENV_VAR_2="default-value-2"
-PORT=8084
+PORT=8080
 SERVICE_PORT=$PORT
 TARGET_PORT=$PORT
 TERMINATION_GRACE_PERIOD=30
@@ -241,7 +241,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-document
-                  name: pds-service-host
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_10_PREDICATES_0
               value: /document/**
             - name: SPDS_GATEWAY_ROUTES_10_FILTERS_0
@@ -263,7 +263,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-ekyc
-                  name: pds-service-host
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_12_PREDICATES_0
               value: /ekyc/**
             - name: SPDS_GATEWAY_ROUTES_12_FILTERS_0
@@ -274,7 +274,7 @@ append_extra_env_vars() {
               valueFrom:
                 configMapKeyRef:
                   key: spds-ekyc
-                  name: pds-service-host
+                  name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_13_PREDICATES_0
               value: /spds-ekyc-api-docs/**
             - name: SPDS_GATEWAY_ROUTES_13_FILTERS_0
