@@ -240,7 +240,7 @@ append_extra_env_vars() {
             - name: SPDS_GATEWAY_ROUTES_10_URI
               valueFrom:
                 configMapKeyRef:
-                  key: spds-workflow
+                  key: spds-document
                   name: pds-service-host
             - name: SPDS_GATEWAY_ROUTES_10_PREDICATES_0
               value: /document/**
@@ -256,6 +256,28 @@ append_extra_env_vars() {
             - name: SPDS_GATEWAY_ROUTES_11_PREDICATES_0
               value: /spds-document-api-docs/**
             - name: SPDS_GATEWAY_ROUTES_11_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_12_ID
+              value: spds-ekyc
+            - name: SPDS_GATEWAY_ROUTES_12_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-ekyc
+                  name: pds-service-host
+            - name: SPDS_GATEWAY_ROUTES_12_PREDICATES_0
+              value: /ekyc/**
+            - name: SPDS_GATEWAY_ROUTES_12_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_13_ID
+              value: spds-ekyc-swagger-api-docs
+            - name: SPDS_GATEWAY_ROUTES_13_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-ekyc
+                  name: pds-service-host
+            - name: SPDS_GATEWAY_ROUTES_13_PREDICATES_0
+              value: /spds-ekyc-api-docs/**
+            - name: SPDS_GATEWAY_ROUTES_13_FILTERS_0
               value: "0"
 EOF
   fi
