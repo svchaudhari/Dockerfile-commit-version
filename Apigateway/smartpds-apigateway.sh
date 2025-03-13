@@ -116,7 +116,7 @@ EOF
   fi
 }
 
-# Function to append environment variables from an external file
+# #Function to append environment variables from an external file
 
 # Function to append environment variables from an external file
 append_extra_env_vars() {
