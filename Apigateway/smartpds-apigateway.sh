@@ -470,14 +470,14 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
   - name: http
-    port: $SERVICE_PORT
+    port: $PORT
+    nodePort: 30004
     protocol: TCP
-    targetPort: $TARGET_PORT
+    targetPort: $PORT
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
-  type: ClusterIP
+  type: NodePort
 EOF
   echo "Service '$SERVICE_NAME' updated successfully."
 fi
-
