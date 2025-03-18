@@ -249,7 +249,7 @@ append_extra_env_vars() {
             - name: SMS_NIC_SIGNATURE
               valueFrom:
                 secretKeyRef:
-                  key: signature
+                  key: sign
                   name: pds-notification-sms
             - name: SMS_NIC_PIN
               valueFrom:
@@ -264,7 +264,7 @@ append_extra_env_vars() {
             - name: SMS_NIC_URL
               valueFrom:
                 configMapKeyRef:
-                  key: smartpds-sms-url
+                  key: smartpds-sms-url1
                   name: pds-service-host
             - name: SMS_NIC_ENTITYID
               value: "1401452190000038911"
