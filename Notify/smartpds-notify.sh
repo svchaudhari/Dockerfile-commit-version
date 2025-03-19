@@ -249,7 +249,7 @@ append_extra_env_vars() {
             - name: SMS_NIC_SIGNATURE
               valueFrom:
                 secretKeyRef:
-                  key: sign
+                  key: signature
                   name: pds-notification-sms
             - name: SMS_NIC_PIN
               valueFrom:
