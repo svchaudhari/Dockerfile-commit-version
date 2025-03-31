@@ -1,4 +1,5 @@
 
+
 #!/bin/bash
 
 # Default values
@@ -8,7 +9,7 @@ IMAGE="svchaudhari/smartpds-notify:master-1"
 REPLICAS=3
 ENV_VAR_1="default-value-1"
 ENV_VAR_2="default-value-2"
-PORT=8086
+PORT=8083
 SERVICE_PORT=$PORT
 TARGET_PORT=$PORT
 TERMINATION_GRACE_PERIOD=30
@@ -25,13 +26,13 @@ MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
 EXTRA_ENV=true
-EXTERNAL_ENV_FILE="external-var-ekyc.txt"  # Path to external file
+EXTERNAL_ENV_FILE="external-var-grievance.txt"  # Path to external file
 
 
 
 # Function to print usage
 usage() {
-  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-ee EXTRA_ENV] [-ae append_external_env_vars]"
+  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-EE EXTRA_ENV] [-AE append_external_env_vars]"
   exit 1
 }
 
@@ -81,6 +82,14 @@ create_deployment_with_db_vars() {
                 secretKeyRef:
                   key: password
                   name: $SECRET_DB
+            - name: SPRING_JPA_HIBERNATE_DDL__AUTO
+              value: "update"
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMATE_SQL
+              value: "true"
+
+
 EOF
   fi
 }
@@ -118,41 +127,6 @@ EOF
 # Function to append environment variables from an external file
 
 # Function to append environment variables from an external file
-append_extra_env_vars() {
-  if [[ "$EXTRA_ENV" == "true" ]]; then
-    echo "Appending database environment variables to the deployment file..."
-    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: ADV_API_BASE_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: smartpds-adv-url
-                  name: pds-service-host
-            - name: ADV_APPLICATION_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  key: username
-                  name: pds-adv
-            - name: ADV_APPLICATION_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: pds-adv
-            - name: ADV_APP_AUTH_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: authkey
-                  name: pds-adv
-            - name: ADV_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: apikey
-                  name: pds-adv
-            - name: ADV_APP_ID
-              value: "SMARTPDS"
-EOF
-  fi
-}
-
 append_external_env_vars() {
   CONFIGMAP_NAME="pds-service-host"
   SECRET_NAME="db"
@@ -250,6 +224,7 @@ EOF
                   name: $CONFIGMAP_NAME
                   key: spds-ekyc
 EOF
+
         else
           # Default case: add the raw value
           cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
@@ -263,6 +238,119 @@ EOF
     echo "External environment file '$EXTERNAL_ENV_FILE' not found."
   fi
 }
+append_extra_env_vars() {
+  if [[ "$EXTRA_ENV" == "true" ]]; then
+    echo "Appending database environment variables to the deployment file..."
+    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: SPDS_GATEWAY_ROUTES_COUNT
+              value: "14"
+            - name: SPDS_GATEWAY_ROUTES_0_ID
+              value: "spds-workflow"
+            - name: SPDS_GATEWAY_ROUTES_0_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-workflow
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_0_PREDICATES_0
+              value: "/workflow/**"
+            - name: SPDS_GATEWAY_ROUTES_0_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_1_ID
+              value: "spds-admin"
+            - name: SPDS_GATEWAY_ROUTES_1_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-admin
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_1_PREDICATES_0
+              value: "/admin/**"
+            - name: SPDS_GATEWAY_ROUTES_1_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_2_ID
+              value: "spds-rcms"
+            - name: SPDS_GATEWAY_ROUTES_2_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-rcms
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_2_PREDICATES_0
+              value: "/rcms/**"
+            - name: SPDS_GATEWAY_ROUTES_2_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_3_ID
+              value: "spds-notify"
+            - name: SPDS_GATEWAY_ROUTES_3_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-notify
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_3_PREDICATES_0
+              value: "/notify/**"
+            - name: SPDS_GATEWAY_ROUTES_3_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_4_ID
+              value: "spds-fps"
+            - name: SPDS_GATEWAY_ROUTES_4_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-fps
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_4_PREDICATES_0
+              value: "/fps/**"
+            - name: SPDS_GATEWAY_ROUTES_4_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_5_ID
+              value: "spds-workflow-swagger-api-docs"
+            - name: SPDS_GATEWAY_ROUTES_5_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-workflow
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_5_PREDICATES_0
+              value: "/spds-workflow-api-docs/**"
+            - name: SPDS_GATEWAY_ROUTES_5_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_6_ID
+              value: "spds-admin-swagger-api-docs"
+            - name: SPDS_GATEWAY_ROUTES_6_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-admin
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_6_PREDICATES_0
+              value: "/spds-admin-api-docs/**"
+            - name: SPDS_GATEWAY_ROUTES_6_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_7_ID
+              value: "spds-rcms-swagger-api-docs"
+            - name: SPDS_GATEWAY_ROUTES_7_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-rcms
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_7_PREDICATES_0
+              value: "/spds-rcms-api-docs/**"
+            - name: SPDS_GATEWAY_ROUTES_7_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_8_ID
+              value: "spds-notify-swagger-api-docs"
+            - name: SPDS_GATEWAY_ROUTES_8_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-notify
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_8_PREDICATES_0
+              value: "/spds-notify-api-docs/**"
+            - name: SPDS_GATEWAY_ROUTES_8_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_9_ID
+              value: "spds-fps-swagger-api-docs"
+EOF
+  fi
+}
+
+
+
 
 # Check if the deployment exists
 EXISTING_DEPLOYMENT=$(kubectl get deployment $DEPLOYMENT_NAME -n $NAMESPACE --ignore-not-found)
@@ -335,7 +423,7 @@ spec:
               cpu: "250m"
             limits:
               memory: "512Mi"
-              cpu: "300m"
+              cpu: "500m"
           lifecycle:
             preStop:
               exec:
@@ -350,11 +438,12 @@ spec:
               value: $DEPLOYMENT_NAME
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
+  
 EOF
 append_external_env_vars
-append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
+#append_extra_env_vars
 # Conditionally include init containers
 if [[ "$INIT_CONTAINER_ENABLED" == "true" ]]; then
   if [[ "$DB_MIGRATION_ENABLED" == "true" ]]; then
@@ -415,9 +504,9 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
   - name: http
-    port: $PORT
+    port: $SERVICE_PORT
     protocol: TCP
-    targetPort: $PORT
+    targetPort: $TARGET_PORT
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
@@ -447,14 +536,12 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
   - name: http
-    port: $PORT
+    port: $SERVICE_PORT
     protocol: TCP
-    nodePort: 30009
-    targetPort: $PORT
+    targetPort: $TARGET_PORT
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
   type: ClusterIP
 EOF
-  echo "Service '$SERVICE_NAME' updated successfully."
-fi
+  echo "Service '$SERVICE_NAME' updated successfully

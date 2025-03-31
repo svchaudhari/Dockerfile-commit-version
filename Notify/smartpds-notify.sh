@@ -160,7 +160,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-admin
+                  key: spds-admin
 EOF
         elif [[ "$ENV_VALUE" =~ 8082 ]]; then
           # smartpds-workflow service
@@ -169,7 +169,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-workflow
+                  key: spds-workflow
 EOF
         elif [[ "$ENV_VALUE" =~ 8085 ]]; then
           # smartpds-fps service
@@ -178,7 +178,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-fps
+                  key: spds-fps
 EOF
         elif [[ "$ENV_VALUE" =~ 8080 ]]; then
           # smartpds-apigateway service
@@ -187,7 +187,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-apigateway
+                  key: spds-apigateway
 EOF
         elif [[ "$ENV_VALUE" =~ 8084 ]]; then
           # smartpds-notify service
@@ -196,7 +196,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-notify
+                  key: spds-notify
 EOF
         elif [[ "$ENV_VALUE" =~ 8083 ]]; then
           # smartpds-rcms service
@@ -205,7 +205,16 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-rcms
+                  key: spds-rcms
+EOF
+        elif [[ "$ENV_VALUE" =~ 8086 ]]; then
+          # smartpds-rcms service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: spds-ekyc
 EOF
         else
           # Default case: add the raw value

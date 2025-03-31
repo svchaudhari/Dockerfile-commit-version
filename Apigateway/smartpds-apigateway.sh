@@ -39,7 +39,7 @@ usage() {
 
 
 # Parse command-line arguments
-while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
+while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db::EE:AE:h" opt; do
   case $opt in
     n) NAMESPACE=$OPTARG ;;
     d) DEPLOYMENT_NAME=$OPTARG ;;
@@ -416,7 +416,7 @@ rm -f ${DEPLOYMENT_NAME}-deployment.yaml
 echo "New deployment '$DEPLOYMENT_NAME' created successfully."
 
 # Check if the service exists
-EXISTING_SERVICE=$(kubectl get service $SERVICE_NAME -n $NAMESPACE --ignore-not-found)
+  EXISTING_SERVICE=$(kubectl get service $SERVICE_NAME -n $NAMESPACE --ignore-not-found)
 
 if [[ -z "$EXISTING_SERVICE" ]]; then
   echo "Service '$SERVICE_NAME' does not exist. Creating a new service..."

@@ -124,7 +124,16 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: smartpds-rcms
+                  key: spds-rcms
+EOF
+        elif [[ "$ENV_VALUE" =~ 8086 ]]; then
+          # smartpds-rcms service
+          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: $ENV_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: $CONFIGMAP_NAME
+                  key: spds-ekyc
 EOF
         else
           # Default case: add the raw value
