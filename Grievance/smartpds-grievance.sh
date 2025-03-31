@@ -254,6 +254,7 @@ append_extra_env_vars() {
                   name: impds
             - name: IMPDS_STATECODE
               value: 08
+            
 EOF
   fi
 }
@@ -352,7 +353,7 @@ EOF
 append_external_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
-#append_extra_env_vars
+append_extra_env_vars
 # Conditionally include init containers
 if [[ "$INIT_CONTAINER_ENABLED" == "true" ]]; then
   if [[ "$DB_MIGRATION_ENABLED" == "true" ]]; then
