@@ -249,7 +249,7 @@ append_extra_env_vars() {
                   name: $CONFIGMAP_HOST
             - name: IMPDS_USERAUTHENTICATION
               valueFrom:
-                SecretKeyRef:
+                secretKeyRef:
                   key: key
                   name: impds
             - name: IMPDS_STATECODE
