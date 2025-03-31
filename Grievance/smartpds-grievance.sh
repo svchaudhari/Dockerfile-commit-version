@@ -253,7 +253,7 @@ append_extra_env_vars() {
                   key: key
                   name: impds
             - name: IMPDS_STATECODE
-              value: 08
+              value: "08"
             
 EOF
   fi
