@@ -351,9 +351,9 @@ spec:
   
 EOF
 append_external_env_vars
+append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
-append_extra_env_vars
 # Conditionally include init containers
 if [[ "$INIT_CONTAINER_ENABLED" == "true" ]]; then
   if [[ "$DB_MIGRATION_ENABLED" == "true" ]]; then
