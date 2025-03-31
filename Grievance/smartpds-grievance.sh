@@ -454,5 +454,5 @@ spec:
   sessionAffinity: None
   type: ClusterIP
 EOF
-  echo "Service '$SERVICE_NAME' updated successfully
+  echo "Service '$SERVICE_NAME' updated successfully."
 fi
