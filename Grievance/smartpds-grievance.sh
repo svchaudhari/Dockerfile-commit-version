@@ -242,109 +242,18 @@ append_extra_env_vars() {
   if [[ "$EXTRA_ENV" == "true" ]]; then
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: SPDS_GATEWAY_ROUTES_COUNT
-              value: "14"
-            - name: SPDS_GATEWAY_ROUTES_0_ID
-              value: "spds-workflow"
-            - name: SPDS_GATEWAY_ROUTES_0_URI
+            - name: IMPDS_RC_URL
               valueFrom:
                 configMapKeyRef:
-                  key: spds-workflow
+                  key: impds-url
                   name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_0_PREDICATES_0
-              value: "/workflow/**"
-            - name: SPDS_GATEWAY_ROUTES_0_FILTERS_0
-              value: "1"
-            - name: SPDS_GATEWAY_ROUTES_1_ID
-              value: "spds-admin"
-            - name: SPDS_GATEWAY_ROUTES_1_URI
+            - name: IMPDS_USERAUTHENTICATION
               valueFrom:
-                configMapKeyRef:
-                  key: spds-admin
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_1_PREDICATES_0
-              value: "/admin/**"
-            - name: SPDS_GATEWAY_ROUTES_1_FILTERS_0
-              value: "1"
-            - name: SPDS_GATEWAY_ROUTES_2_ID
-              value: "spds-rcms"
-            - name: SPDS_GATEWAY_ROUTES_2_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-rcms
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_2_PREDICATES_0
-              value: "/rcms/**"
-            - name: SPDS_GATEWAY_ROUTES_2_FILTERS_0
-              value: "1"
-            - name: SPDS_GATEWAY_ROUTES_3_ID
-              value: "spds-notify"
-            - name: SPDS_GATEWAY_ROUTES_3_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-notify
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_3_PREDICATES_0
-              value: "/notify/**"
-            - name: SPDS_GATEWAY_ROUTES_3_FILTERS_0
-              value: "1"
-            - name: SPDS_GATEWAY_ROUTES_4_ID
-              value: "spds-fps"
-            - name: SPDS_GATEWAY_ROUTES_4_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-fps
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_4_PREDICATES_0
-              value: "/fps/**"
-            - name: SPDS_GATEWAY_ROUTES_4_FILTERS_0
-              value: "1"
-            - name: SPDS_GATEWAY_ROUTES_5_ID
-              value: "spds-workflow-swagger-api-docs"
-            - name: SPDS_GATEWAY_ROUTES_5_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-workflow
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_5_PREDICATES_0
-              value: "/spds-workflow-api-docs/**"
-            - name: SPDS_GATEWAY_ROUTES_5_FILTERS_0
-              value: "0"
-            - name: SPDS_GATEWAY_ROUTES_6_ID
-              value: "spds-admin-swagger-api-docs"
-            - name: SPDS_GATEWAY_ROUTES_6_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-admin
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_6_PREDICATES_0
-              value: "/spds-admin-api-docs/**"
-            - name: SPDS_GATEWAY_ROUTES_6_FILTERS_0
-              value: "0"
-            - name: SPDS_GATEWAY_ROUTES_7_ID
-              value: "spds-rcms-swagger-api-docs"
-            - name: SPDS_GATEWAY_ROUTES_7_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-rcms
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_7_PREDICATES_0
-              value: "/spds-rcms-api-docs/**"
-            - name: SPDS_GATEWAY_ROUTES_7_FILTERS_0
-              value: "0"
-            - name: SPDS_GATEWAY_ROUTES_8_ID
-              value: "spds-notify-swagger-api-docs"
-            - name: SPDS_GATEWAY_ROUTES_8_URI
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-notify
-                  name: $CONFIGMAP_HOST
-            - name: SPDS_GATEWAY_ROUTES_8_PREDICATES_0
-              value: "/spds-notify-api-docs/**"
-            - name: SPDS_GATEWAY_ROUTES_8_FILTERS_0
-              value: "0"
-            - name: SPDS_GATEWAY_ROUTES_9_ID
-              value: "spds-fps-swagger-api-docs"
+                SecretKeyRef:
+                  key: key
+                  name: impds
+            - name: IMPDS_STATECODE
+              value: 08
 EOF
   fi
 }
