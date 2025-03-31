@@ -253,7 +253,23 @@ append_extra_env_vars() {
                   key: key
                   name: impds
             - name: IMPDS_STATECODE
-              value: "08"
+              value: "08" 
+            - name: INVITATION_EMAIL_SEND
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-notify
+                  name: pds-service-host
+            - name: EKYC_ADV_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-ekyc
+                  name: pds-service-host
+            - name: RCDETAILS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-rcms
+                  name: pds-service-host
+
             
 EOF
   fi

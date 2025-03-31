@@ -1,7 +1,4 @@
 #spring.cloud.compatibility-verifier.enabled=false
-invitation.email.send=http://localhost:8084
-ekyc.adv.url=http://localhost:8086
-rcDetails.url=http://localhost:8083
 management.endpoints.web.exposure.include=health,info,prometheus
 
 # Optionally, configure the path for Prometheus metrics endpoint (default is /actuator/prometheus)
