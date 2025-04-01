@@ -313,6 +313,18 @@ spec:
               value: $DEPLOYMENT_NAME
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
+            - name: INVITATION_EMAIL_SEND
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-notify
+                  name: pds-service-host
+            - name: EKYC_ADV_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-ekyc
+                  name: pds-service-host
+
+
 EOF
 append_external_env_vars
 create_deployment_with_db_vars

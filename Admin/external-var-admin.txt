@@ -10,4 +10,4 @@ management.endpoint.info.enabled=true
 
 
 spring.cloud.compatibility-verifier.enabled=false
-invitation.email.send=http://localhost:8084
+
