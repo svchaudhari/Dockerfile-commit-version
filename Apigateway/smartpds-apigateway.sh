@@ -124,7 +124,7 @@ append_extra_env_vars() {
     echo "Appending database environment variables to the deployment file..."
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
             - name: SPDS_GATEWAY_ROUTES_COUNT
-              value: "14"
+              value: "16"
             - name: SPDS_GATEWAY_ROUTES_0_ID
               value: "spds-workflow"
             - name: SPDS_GATEWAY_ROUTES_0_URI
@@ -278,6 +278,28 @@ append_extra_env_vars() {
             - name: SPDS_GATEWAY_ROUTES_13_PREDICATES_0
               value: /spds-ekyc-api-docs/**
             - name: SPDS_GATEWAY_ROUTES_13_FILTERS_0
+              value: "0"
+            - name: SPDS_GATEWAY_ROUTES_14_ID
+              value: spds-grievance
+            - name: SPDS_GATEWAY_ROUTES_14_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-grievance
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_14_PREDICATES_0
+              value: /grievance/**
+            - name: SPDS_GATEWAY_ROUTES_14_FILTERS_0
+              value: "1"
+            - name: SPDS_GATEWAY_ROUTES_15_ID
+              value: spds-grievance-swagger-api-docs
+            - name: SPDS_GATEWAY_ROUTES_15_URI
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-grievance
+                  name: $CONFIGMAP_HOST
+            - name: SPDS_GATEWAY_ROUTES_15_PREDICATES_0
+              value: /spds-grievance-api-docs/**
+            - name: SPDS_GATEWAY_ROUTES_15_FILTERS_0
               value: "0"
 EOF
   fi
@@ -479,5 +501,4 @@ spec:
   sessionAffinity: None
   type: NodePort
 EOF
-  echo "Service '$SERVICE_NAME' updated successfully."
-fi
+  echo "Service '$SERVICE_NAME' updated successfully.
