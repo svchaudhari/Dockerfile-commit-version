@@ -432,4 +432,3 @@ EOF
   echo "Service '$SERVICE_NAME' updated successfully."
 fi
 
-    
