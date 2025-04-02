@@ -194,7 +194,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-admin
+                  key: smartpds-admin
 EOF
         elif [[ "$ENV_VALUE" =~ 8082 ]]; then
           # smartpds-workflow service
@@ -203,7 +203,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-workflow
+                  key: smartpds-workflow
 EOF
         elif [[ "$ENV_VALUE" =~ 8085 ]]; then
           # smartpds-fps service
@@ -212,7 +212,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-fps
+                  key: smartpds-fps
 EOF
         elif [[ "$ENV_VALUE" =~ 8080 ]]; then
           # smartpds-apigateway service
@@ -221,7 +221,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-apigateway
+                  key: smartpds-apigateway
 EOF
         elif [[ "$ENV_VALUE" =~ 8084 ]]; then
           # smartpds-notify service
@@ -230,7 +230,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-notify
+                  key: smartpds-notify
 EOF
         elif [[ "$ENV_VALUE" =~ 8083 ]]; then
           # smartpds-rcms service
@@ -239,16 +239,7 @@ EOF
               valueFrom:
                 configMapKeyRef:
                   name: $CONFIGMAP_NAME
-                  key: spds-rcms
-EOF
-        elif [[ "$ENV_VALUE" =~ 8086 ]]; then
-          # smartpds-rcms service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-ekyc
+                  key: smartpds-rcms
 EOF
         else
           # Default case: add the raw value
@@ -454,7 +445,7 @@ spec:
   selector:
     app: $DEPLOYMENT_NAME
   sessionAffinity: None
-  type: ClusterIP
+  type: NodePort
 EOF
   echo "Service '$SERVICE_NAME' updated successfully."
 fi

@@ -501,4 +501,5 @@ spec:
   sessionAffinity: None
   type: NodePort
 EOF
-  echo "Service '$SERVICE_NAME' updated successfully.
+  echo "Service '$SERVICE_NAME' updated successfully."
+fi
