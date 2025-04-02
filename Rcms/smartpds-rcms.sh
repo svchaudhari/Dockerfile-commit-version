@@ -82,6 +82,44 @@ create_deployment_with_db_vars() {
                 secretKeyRef:
                   key: password
                   name: $SECRET_DB
+            - name: SPRING_JPA_HIBERNATE_DDL__AUTO
+              value: "update"
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMATE_SQL
+              value: "true"
+EOF
+  fi
+}
+
+append_extra_env_vars() {
+  if [[ "$EXTRA_ENV" == "true" ]]; then
+    echo "Appending database environment variables to the deployment file..."
+    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: IMPDS_RC_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: impds-url
+                  name: $CONFIGMAP_HOST
+            - name: IMPDS_USERAUTHENTICATION
+              valueFrom:
+                secretKeyRef:
+                  key: key
+                  name: impds
+            - name: IMPDS_STATECODE
+              value: "08" 
+            - name: IMPDS_RCNEW_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: impds-rcnew-url
+                  name: $CONFIGMAP_HOST
+            - name: IMPDS_USERAUTHENTICATION
+              valueFrom:
+                secretKeyRef:
+                  key: password
+                  name: impds
+
+            
 EOF
   fi
 }
@@ -118,138 +156,28 @@ EOF
 
 # Function to append environment variables from an external file
 
-# Function to append environment variables from an external file
-append_external_env_vars() {
-  CONFIGMAP_NAME="pds-service-host"
-  SECRET_NAME="db"
 
-  if [[ -f "$EXTERNAL_ENV_FILE" ]]; then
-    while IFS= read -r line; do
-      # Skip empty lines and lines starting with '#'
-      if [[ -n "$line" && ! "$line" =~ ^# ]]; then
-        # Extract the key and value
-        ENV_NAME=$(echo "$line" | cut -d '=' -f 1)
-        ENV_VALUE=$(echo "$line" | cut -d '=' -f 2-)
-
-        # Replace dots with underscores and convert to uppercase
-        ENV_NAME=$(echo "$ENV_NAME" | tr '.' '_' | awk '{print toupper($0)}')
-
-        # Check for specific conditions
-        if [[ "$ENV_NAME" =~ URL$ ]]; then
-          # Take from ConfigMap
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: $ENV_NAME
-EOF
-        elif [[ "$ENV_NAME" =~ USERNAME$ || "$ENV_NAME" =~ PASSWORD$ ]]; then
-          # Take from Secret
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: $SECRET_NAME
-                  key: $ENV_NAME
-EOF
-        elif [[ "$ENV_VALUE" =~ 8081 ]]; then
-          # smartpds-admin service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-admin
-EOF
-        elif [[ "$ENV_VALUE" =~ 8082 ]]; then
-          # smartpds-workflow service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-workflow
-EOF
-        elif [[ "$ENV_VALUE" =~ 8085 ]]; then
-          # smartpds-fps service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-fps
-EOF
-        elif [[ "$ENV_VALUE" =~ 8080 ]]; then
-          # smartpds-apigateway service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-apigateway
-EOF
-        elif [[ "$ENV_VALUE" =~ 8084 ]]; then
-          # smartpds-notify service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-notify
-EOF
-        elif [[ "$ENV_VALUE" =~ 8083 ]]; then
-          # smartpds-rcms service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-rcms
-EOF
-        elif [[ "$ENV_VALUE" =~ 8086 ]]; then
-          # smartpds-rcms service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-ekyc
-EOF
-        else
-          # Default case: add the raw value
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              value: "$ENV_VALUE"
-EOF
-        fi
-      fi
-    done < "$EXTERNAL_ENV_FILE"
-  else
-    echo "External environment file '$EXTERNAL_ENV_FILE' not found."
-  fi
-}
-append_extra_env_vars() {
-  if [[ "$EXTRA_ENV" == "true" ]]; then
-    echo "Appending database environment variables to the deployment file..."
-    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-          volumeMounts:
-          - name: app-storage
-            mountPath: /usr/share/smartpds/data
-        - name: nginx
-          image: nginx:latest
-          ports:
-          - containerPort: 80
-          volumeMounts:
-          - name: app-storage
-            mountPath: /usr/share/nginx/html
-      volumes:
-      - name: app-storage
-        persistentVolumeClaim:
-          claimName: smartpds-pvc
-EOF
-  fi
-}
+# append_extra_env_vars() {
+#   if [[ "$EXTRA_ENV" == "true" ]]; then
+#     echo "Appending database environment variables to the deployment file..."
+#     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+#           volumeMounts:
+#           - name: app-storage
+#             mountPath: /usr/share/smartpds/data
+#         - name: nginx
+#           image: nginx:latest
+#           ports:
+#           - containerPort: 80
+#           volumeMounts:
+#           - name: app-storage
+#             mountPath: /usr/share/nginx/html
+#       volumes:
+#       - name: app-storage
+#         persistentVolumeClaim:
+#           claimName: smartpds-pvc
+# EOF
+#   fi
+# }
 
 
 
@@ -340,10 +268,9 @@ spec:
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
 EOF
-append_external_env_vars
+append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
-#append_extra_env_vars
 # Conditionally include init containers
 if [[ "$INIT_CONTAINER_ENABLED" == "true" ]]; then
   if [[ "$DB_MIGRATION_ENABLED" == "true" ]]; then
