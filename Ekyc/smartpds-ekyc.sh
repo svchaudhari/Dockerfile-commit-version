@@ -149,6 +149,30 @@ append_extra_env_vars() {
                   name: pds-adv
             - name: ADV_APP_ID
               value: "SMARTPDS"
+            - name: AADHAR_OTP_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: aadhaar-otp-url
+                  name: pds-service-host
+            - name: AADHAR_OTP_AC
+              valueFrom:
+                secretKeyRef:
+                  key: ac
+                  name: aadhar-otp
+            - name: AADHAR_OTP_LK
+              valueFrom:
+                secretKeyRef:
+                  key: lk
+                  name: aadhar-otp
+            - name: AADHAR_OTP_TYPE
+              value: "A"
+            - name: AADHAR_OTP_VER
+              value: "2.5"
+            - name: AADHAR_OTPS_CH
+              value: "01"
+            - name: AADHAR_OTP_PIDVERSION
+              value: "2.0"
+
 EOF
   fi
 }
