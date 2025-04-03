@@ -178,7 +178,6 @@ append_extra_env_vars() {
               value: "01"
             - name: AADHAR_OTP_PIDVERSION
               value: "2.0"
-
 EOF
   fi
 }

@@ -113,12 +113,6 @@ append_extra_env_vars() {
                 configMapKeyRef:
                   key: impds-rcnew-url
                   name: $CONFIGMAP_HOST
-            - name: IMPDS_USERAUTHENTICATION
-              valueFrom:
-                secretKeyRef:
-                  key: password
-                  name: impds
-
             
 EOF
   fi
