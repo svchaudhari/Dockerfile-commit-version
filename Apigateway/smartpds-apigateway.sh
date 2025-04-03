@@ -240,7 +240,7 @@ append_extra_env_vars() {
             - name: SPDS_GATEWAY_ROUTES_10_URI
               valueFrom:
                 configMapKeyRef:
-                  key: spds-workflow
+                  key: spds-document
                   name: $CONFIGMAP_HOST
             - name: SPDS_GATEWAY_ROUTES_10_PREDICATES_0
               value: /document/**

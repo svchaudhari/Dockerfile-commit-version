@@ -81,6 +81,12 @@ create_deployment_with_db_vars() {
                 secretKeyRef:
                   key: password
                   name: $SECRET_DB
+            - name: SPRING_JPA_HIBERNATE_DDL__AUTO
+              value: "update"
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMATE_SQL
+              value: "true"
 EOF
   fi
 }

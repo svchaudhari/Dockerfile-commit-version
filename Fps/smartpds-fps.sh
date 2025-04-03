@@ -38,117 +38,6 @@ usage() {
 # Function to append environment variables from an external file
 
 # Function to append environment variables from an external file
-append_external_env_vars() {
-  CONFIGMAP_NAME="pds-service-host"
-  SECRET_NAME="db"
-
-  if [[ -f "$EXTERNAL_ENV_FILE" ]]; then
-    while IFS= read -r line; do
-      # Skip empty lines and lines starting with '#'
-      if [[ -n "$line" && ! "$line" =~ ^# ]]; then
-        # Extract the key and value
-        ENV_NAME=$(echo "$line" | cut -d '=' -f 1)
-        ENV_VALUE=$(echo "$line" | cut -d '=' -f 2-)
-
-        # Replace dots with underscores and convert to uppercase
-        ENV_NAME=$(echo "$ENV_NAME" | tr '.' '_' | awk '{print toupper($0)}')
-
-        # Check for specific conditions
-        if [[ "$ENV_NAME" =~ URL$ ]]; then
-          # Take from ConfigMap
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: $ENV_NAME
-EOF
-        elif [[ "$ENV_NAME" =~ USERNAME$ || "$ENV_NAME" =~ PASSWORD$ ]]; then
-          # Take from Secret
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: $SECRET_NAME
-                  key: $ENV_NAME
-EOF
-        elif [[ "$ENV_VALUE" =~ 8081 ]]; then
-          # smartpds-admin service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-admin
-EOF
-        elif [[ "$ENV_VALUE" =~ 8082 ]]; then
-          # smartpds-workflow service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-workflow
-EOF
-        elif [[ "$ENV_VALUE" =~ 8085 ]]; then
-          # smartpds-fps service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-fps
-EOF
-        elif [[ "$ENV_VALUE" =~ 8080 ]]; then
-          # smartpds-apigateway service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-apigateway
-EOF
-        elif [[ "$ENV_VALUE" =~ 8084 ]]; then
-          # smartpds-notify service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-notify
-EOF
-        elif [[ "$ENV_VALUE" =~ 8083 ]]; then
-          # smartpds-rcms service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-rcms
-EOF
-        elif [[ "$ENV_VALUE" =~ 8086 ]]; then
-          # smartpds-rcms service
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: $CONFIGMAP_NAME
-                  key: spds-ekyc
-EOF
-
-        else
-          # Default case: add the raw value
-          cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
-            - name: $ENV_NAME
-              value: "$ENV_VALUE"
-EOF
-        fi
-      fi
-    done < "$EXTERNAL_ENV_FILE"
-  else
-    echo "External environment file '$EXTERNAL_ENV_FILE' not found."
-  fi
-}
 
 # Parse command-line arguments
 while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
@@ -192,6 +81,12 @@ create_deployment_with_db_vars() {
                 secretKeyRef:
                   key: password
                   name: $SECRET_DB
+            - name: SPRING_JPA_HIBERNATE_DDL__AUTO
+              value: "update"
+            - name: SPRING_JPA_SHOW_SQL
+              value: "true"
+            - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMATE_SQL
+              value: "true"
 EOF
   fi
 }
@@ -315,7 +210,6 @@ spec:
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
 EOF
-append_external_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
 # Conditionally include init containers
