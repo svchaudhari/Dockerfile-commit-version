@@ -25,13 +25,14 @@ CPU_REQUEST="250m"
 MEMORY_LIMIT="512Mi"
 CPU_LIMIT="500m"
 DEPLOY_DB_VARS=true
+EXTRA_ENV=true
 EXTERNAL_ENV_FILE="external-var-fps.txt"  # Path to external file
 
 
 
 # Function to print usage
 usage() {
-  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars]"
+  echo "Usage: $0 [-n namespace] [-d deployment_name] [-i image] [-r replicas] [-e1 env_var_1] [-e2 env_var_2] [-p port] [-sp service_port] [-tp target_port] [-t termination_grace_period] [-c configmap_name] [-s secret_name] [-ep enable_probes] [-db deploy_db_vars] [-EE EXTRA_ENV] [-AE append_external_env_vars]"
   exit 1
 }
 
@@ -39,6 +40,7 @@ usage() {
 
 # Function to append environment variables from an external file
 
+# Parse command-line arguments
 # Parse command-line arguments
 while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
   case $opt in
@@ -56,6 +58,8 @@ while getopts "n:d:i:r:e1:e2:p:sp:tp:t:c:s:ep:db:h" opt; do
     s) SECRET_DB=$OPTARG ;;
     ep) ENABLE_PROBES=$OPTARG ;;
     db) DEPLOY_DB_VARS=$OPTARG ;;
+    EE) EXTRA_ENV=$OPTARG ;;
+    AE) append_external_env_vars=$OPTARG ;;
     h) usage ;;
     *) usage ;;
   esac
@@ -112,7 +116,7 @@ EOF
 }
 
  # Conditionally include probes
- create_deployment_with_probes() {
+create_deployment_with_probes() {
   if [[ "$ENABLE_PROBES" == "true" ]]; then
     cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
           livenessProbe:
