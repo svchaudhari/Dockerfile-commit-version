@@ -91,6 +91,26 @@ EOF
   fi
 }
 
+append_extra_env_vars() {
+  if [[ "$EXTRA_ENV" == "true" ]]; then
+    echo "Appending database environment variables to the deployment file..."
+    cat <<EOF >> ${DEPLOYMENT_NAME}-deployment.yaml
+            - name: IMPDS_FPS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: impds-url
+                  name: $CONFIGMAP_HOST
+            - name: IMPDS_USERAUTHENTICATION
+              valueFrom:
+                secretKeyRef:
+                  key: key
+                  name: impds
+            - name: IMPDS_STATECODE
+              value: "08" 
+EOF
+  fi
+}
+
  # Conditionally include probes
  create_deployment_with_probes() {
   if [[ "$ENABLE_PROBES" == "true" ]]; then
@@ -210,6 +230,7 @@ spec:
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
 EOF
+append_extra_env_vars
 create_deployment_with_db_vars
 create_deployment_with_probes
 # Conditionally include init containers
