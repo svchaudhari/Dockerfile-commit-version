@@ -36,7 +36,7 @@ COPY . ./
 
 # Expose port for the development server
 EXPOSE 3000
-CMD ["npm", "start"]
+# CMD ["npm", "start"]
 
 # Stage 3: Production environment
 FROM nginx:alpine AS production
