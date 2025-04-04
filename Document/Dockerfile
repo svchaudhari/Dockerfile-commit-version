@@ -28,10 +28,10 @@ ENV HTTP_PROXY=$NPM_PROXY
 ENV HTTPS_PROXY=$NPM_PROXY
 
 # Ensure curl is installed using the proxy
-RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-    apk update && \
-    apk add --no-cache curl && \
-    rm -rf /var/cache/apk/*
+# RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+#     apk update && \
+#     apk add --no-cache curl && \
+#     rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 

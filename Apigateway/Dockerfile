@@ -27,11 +27,11 @@ ARG NPM_PROXY=http://192.0.2.12:8080
 ENV HTTP_PROXY=$NPM_PROXY
 ENV HTTPS_PROXY=$NPM_PROXY
 
-# Ensure curl is installed using the proxy
-RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
-    apk update && \
-    apk add --no-cache curl && \
-    rm -rf /var/cache/apk/*
+# # Ensure curl is installed using the proxy
+# RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
+#     apk update && \
+#     apk add --no-cache curl && \
+#     rm -rf /var/cache/apk/*
 
 EXPOSE 8080
 
