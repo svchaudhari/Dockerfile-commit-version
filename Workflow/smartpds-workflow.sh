@@ -87,6 +87,16 @@ create_deployment_with_db_vars() {
               value: "true"
             - name: SPRING_JPA_PROPERTIES_HIBERNATE_FORMATE_SQL
               value: "true"
+            - name: SPDS_RCMS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-rcms
+                  name: pds-service-host
+            - name: SPDS_FPS_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: spds-fps
+                  name: pds-service-host
 EOF
   fi
 }
@@ -209,16 +219,6 @@ spec:
               value: $DEPLOYMENT_NAME
             - name: JAVA_OPTS
               value: "-Xmx384m -Xms256m"
-            - name: SPDS_RCMS_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-rcms
-                  name: pds-service-host
-            - name: SPDS_FPS_URL
-              valueFrom:
-                configMapKeyRef:
-                  key: spds-fps
-                  name: pds-service-host
 EOF
 create_deployment_with_db_vars
 create_deployment_with_probes

@@ -4,7 +4,6 @@ VITE_RCMS_SERVICE=https://an.smartpds.nic.in/rcms
 VITE_FPS_SERVICE=https://an.smartpds.nic.in/fps
 VITE_WORKFLOW_SERVICE1=https://an.smartpds.nic.in/rcms/api/v1
 VITE_UPLOAD_SERVICE=https://an.smartpds.nic.in/document
-VITE_DOCUMENT_SERVICE=https://an.smartpds.nic.in/document
 VIT_API_MASTER=https://an.smartpds.nic.in/
 VITE_GRIEVANCE_ADMIN_SERVICE=https://an.smartpds.nic.in/admin
 VITE_GRIEVANCE_SERVICE=https://an.smartpds.nic.in/grievance
