@@ -217,7 +217,7 @@ spec:
                 configMapKeyRef:
                   key: spds-ekyc
                   name: pds-service-host
-            - name: PREGEGISTRAION_URL
+            - name: PREREGEGISTRATION_URL
               valueFrom:
                 configMapKeyRef:
                   key: preregistration-url
