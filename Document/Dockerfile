@@ -1,5 +1,5 @@
 # Build stage
-FROM svchaudhari/a  lpine-maven-builder-jdk17:master-1 AS build
+FROM svchaudhari/alpine-maven-builder-jdk17:master-1 AS build
 ARG WORK_DIR
 WORKDIR /app
 
