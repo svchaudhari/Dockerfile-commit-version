@@ -8,6 +8,7 @@ VITE_DOCUMENT_SERVICE=https://nl.smartpds.nic.in/document
 VIT_API_MASTER=https://nl.smartpds.nic.in/
 VITE_GRIEVANCE_ADMIN_SERVICE=https://nl.smartpds.nic.in/admin
 VITE_GRIEVANCE_SERVICE=https://nl.smartpds.nic.in/grievance
+VITE_E_KYC_SERVICE=https://nl.smartpds.nic.in/ekyc  
 
 
 
