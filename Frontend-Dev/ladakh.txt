@@ -1,14 +1,14 @@
-VITE_ADMIN_SERVICE=https://ml.smartpds.nic.in/admin
-VITE_WORKFLOW_SERVICE=https://ml.smartpds.nic.in/workflow
-VITE_RCMS_SERVICE=https://ml.smartpds.nic.in/rcms
-VITE_FPS_SERVICE=https://ml.smartpds.nic.in/fpsms
-VITE_WORKFLOW_SERVICE1=https://ml.smartpds.nic.in/rcms/api/v1
-VITE_UPLOAD_SERVICE=https://ml.smartpds.nic.in/document
-VITE_DOCUMENT_SERVICE=https://ml.smartpds.nic.in/document
-VIT_API_MASTER=https://ml.smartpds.nic.in/
-VITE_GRIEVANCE_ADMIN_SERVICE=https://ml.smartpds.nic.in/admin
-VITE_GRIEVANCE_SERVICE=https://ml.smartpds.nic.in/grievance
-VITE_E_KYC_SERVICE=https://ml.smartpds.nic.in/ekyc  
+VITE_ADMIN_SERVICE=https://la.smartpds.nic.in/admin
+VITE_WORKFLOW_SERVICE=https://la.smartpds.nic.in/workflow
+VITE_RCMS_SERVICE=https://la.smartpds.nic.in/rcms
+VITE_FPS_SERVICE=https://la.smartpds.nic.in/fpsms
+VITE_WORKFLOW_SERVICE1=https://la.smartpds.nic.in/rcms/api/v1
+VITE_UPLOAD_SERVICE=https://la.smartpds.nic.in/document
+VITE_DOCUMENT_SERVICE=https://la.smartpds.nic.in/document
+VIT_API_MASTER=https://la.smartpds.nic.in/
+VITE_GRIEVANCE_ADMIN_SERVICE=https://la.smartpds.nic.in/admin
+VITE_GRIEVANCE_SERVICE=https://la.smartpds.nic.in/grievance
+VITE_E_KYC_SERVICE=https://la.smartpds.nic.in/ekyc  
 
 
 
