@@ -1,4 +1,5 @@
 # Stage 1: Build the React app
+# Author: Swapnil
 FROM node:18-alpine AS build
 WORKDIR /app
 

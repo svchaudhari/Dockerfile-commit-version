@@ -1,4 +1,5 @@
 # Build stage
+# Author: Swapnil
 FROM svchaudhari/alpine-maven-builder-jdk17:master-1 AS build
 ARG WORK_DIR
 WORKDIR /app
