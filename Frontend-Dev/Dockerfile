@@ -6,7 +6,7 @@ WORKDIR /app
 ARG NPM_PROXY=http://192.0.2.12:8080
 ENV HTTP_PROXY=$NPM_PROXY
 ENV HTTPS_PROXY=$NPM_PROXY
-ENV NODE_OPTIONS=--max-old-space-size=4096
+# ENV NODE_OPTIONS=--max-old-space-size=4096
 
 # Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
