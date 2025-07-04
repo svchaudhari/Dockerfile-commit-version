@@ -17,7 +17,6 @@ RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
     npm install --verbose
 
 # Copy the rest of 
-the application code and build for production
 COPY . ./
 RUN npm run build
 
