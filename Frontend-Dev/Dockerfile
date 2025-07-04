@@ -6,6 +6,7 @@ WORKDIR /app
 ARG NPM_PROXY=http://192.0.2.12:8080
 ENV HTTP_PROXY=$NPM_PROXY
 ENV HTTPS_PROXY=$NPM_PROXY
+ENV NODE_OPTIONS=--max-old-space-size=2048
 
 # Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
@@ -15,7 +16,8 @@ RUN export NODE_OPTIONS=--openssl-legacy-provider
 RUN export http_proxy=$HTTP_PROXY https_proxy=$HTTPS_PROXY && \
     npm install --verbose
 
-# Copy the rest of the application code and build for production
+# Copy the rest of 
+the application code and build for production
 COPY . ./
 RUN npm run build
 
